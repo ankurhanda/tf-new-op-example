@@ -8,17 +8,17 @@ message("Include libraries are: ${Tensorflow_INCLUDE_DIRS}")
 # C++11 required for tensorflow
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 
-
-link_directories(/home/ahanda/anaconda3/lib/python3.6/site-packages/tensorflow/)
+link_directories(/usr/local/lib/python3.6/site-packages/tensorflow)
+#link_directories(/home/ahanda/anaconda3/lib/python3.6/site-packages/tensorflow/)
 link_libraries(-ltensorflow_framework)
-    # if GCC > 5
-#if (CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 5.0 OR CMAKE_CXX_COMPILER_VERSION VERSION_EQUAL 5.0)
-#   set(CMAKE_CXX_FLAGS "-D_GLIBCXX_USE_CXX11_ABI=0 ${CMAKE_CXX_FLAGS}")
-#endif()
 
 # build the actual operation which can be used directory
 include_directories(${Tensorflow_INCLUDE_DIRS})
 add_library(inner_product SHARED inner_product.cc)
+
+# build the actual operation which can be used directory
+include_directories(${Tensorflow_INCLUDE_DIRS})
+add_library(se3toRt SHARED se3toRt_transform.cc)
 
 include_directories(${Tensorflow_INCLUDE_DIRS})
 add_library(se3_layer SHARED se3_transform.cc)
