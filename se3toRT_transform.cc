@@ -19,7 +19,6 @@ REGISTER_OP("SE3toMatrixRt")
     TF_RETURN_IF_ERROR(c->WithRank(c->input(0), 2, &input_shape));
 
     c->set_output(0, c->MakeShape({c->Dim(input_shape,0), 3, 4}));
-    //c->set_output(0, c->TensorShape(c->Dim(input_shape, 0), 3, 4));
     return Status::OK();
   });
 
@@ -73,23 +72,27 @@ public:
 	auto omega_z = se3_vector_input_tensor(b,2);
 
 	auto theta = sqrt(omega_x*omega_x + omega_y * omega_y + omega_z * omega_z);
-	
-	output_tensor(b,0,0) = theta;     
-	output_tensor(b,0,1) = theta;     
-	output_tensor(b,0,2) = theta;     
 
-	/*output_tensor(b,1,0) = r00 * X + r01 * Y + r02* Z + t0;     
-	output_tensor(b,1,1) = r00 * X + r01 * Y + r02* Z + t0;     
-	output_tensor(b,1,2) = r00 * X + r01 * Y + r02* Z + t0;     
+	auto sin_term = sin(theta)/theta;
+	auto cos_term = (1 - cos(theta))/(theta*theta);
 
-	output_tensor(b,2,0) = r00 * X + r01 * Y + r02* Z + t0;     
-	output_tensor(b,2,1) = r00 * X + r01 * Y + r02* Z + t0;     
-	output_tensor(b,2,2) = r00 * X + r01 * Y + r02* Z + t0;     
+	if (theta < 1e-12)
+	{
+		cos_term = 0;
+	}
+
+	output_tensor(b,0,0) = 1 + cos_term * (-omega_z*omega_z - omega_y*omega_y);     
+	output_tensor(b,0,1) = -sin_term * omega_z + cos_term * omega_x * omega_y;     
+	output_tensor(b,0,2) =  sin_term * omega_y + cos_term * omega_x * omega_z;      
+
+	output_tensor(b,1,0) = sin_term * omega_z + cos_term * omega_x * omega_y;     
+	output_tensor(b,1,1) = 1 + cos_term * (-omega_z * omega_z - omega_x * omega_x);     
+	output_tensor(b,1,2) = -sin_term * omega_x + cos_term * omega_z * omega_y;     
+
+	output_tensor(b,2,0) = -sin_term * omega_y + cos_term * omega_x * omega_z;     
+	output_tensor(b,2,1) = sin_term * omega_x + cos_term * omega_y * omega_z ;     
+	output_tensor(b,2,2) = 1 + cos_term * (-omega_x*omega_x - omega_y*omega_y);     
 	
-	output_tensor(b,0,3) = r00 * X + r01 * Y + r02* Z + t0;     
-	output_tensor(b,1,3) = r00 * X + r01 * Y + r02* Z + t0;     
-	output_tensor(b,1,2) = r00 * X + r01 * Y + r02* Z + t0;
-   	*/	
     }
 
   }
