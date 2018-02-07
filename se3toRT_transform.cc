@@ -12,7 +12,7 @@ using namespace tensorflow;
 
 REGISTER_OP("SE3toMatrixRt")
   .Input("se3_vector_input: float")
-  .Output("SE3_Transform_Rt: float")
+  .Output("se3_transform: float")
   .SetShapeFn([](::tensorflow::shape_inference::InferenceContext* c) {
 
     shape_inference::ShapeHandle input_shape;
@@ -48,7 +48,7 @@ public:
     
     // check input is a standing vector
     DCHECK_EQ(se3_vector_input.dims(), 2);
-    DCHECK_EQ(se3_vector_input.dim_size(1), 3);
+    DCHECK_EQ(se3_vector_input.dim_size(1), 6);
     
     // create output shape
     TensorShape output_shape;
@@ -92,7 +92,10 @@ public:
 	output_tensor(b,2,0) = -sin_term * omega_y + cos_term * omega_x * omega_z;     
 	output_tensor(b,2,1) = sin_term * omega_x + cos_term * omega_y * omega_z ;     
 	output_tensor(b,2,2) = 1 + cos_term * (-omega_x*omega_x - omega_y*omega_y);     
-	
+
+	output_tensor(b,0,3) = se3_vector_input_tensor(b,3);	
+	output_tensor(b,1,3) = se3_vector_input_tensor(b,4);	
+	output_tensor(b,2,3) = se3_vector_input_tensor(b,5);	
     }
 
   }
