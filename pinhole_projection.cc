@@ -20,14 +20,6 @@ REGISTER_OP("PinholeProjection")
     shape_inference::ShapeHandle inverse_camera_matrix_shape;
     TF_RETURN_IF_ERROR(c->WithRank(c->input(1), 3, &inverse_camera_matrix_shape));
     
-    /*shape_inference::DimensionHandle output_rows = c->Dim(input_shape, 0);
-  
-    shape_inference::DimensionHandle input_rows = c->Dim(input_shape, 0);
-    shape_inference::DimensionHandle weight_cols = c->Dim(weight_shape, 1);
-    shape_inference::DimensionHandle merged;
-    TF_RETURN_IF_ERROR(c->Merge(input_rows, weight_cols, &merged));
-    */
-
     c->set_output(0, c->Tensor(c->Dim(input_shape,0), c->Dim(input_shape,1), c->Dim(input_shape,2), 3));
     return Status::OK();
   });
@@ -103,13 +95,6 @@ public:
 	output_tensor(h,w,2) = depth;     
 	}
     }
-
-   /* for (int i = 0; i < output->shape().dim_size(0); i++) {
-      output_tensor(i, 0) = 0;
-      for (int j = 0; j < weights.shape().dim_size(1); j++) {
-        output_tensor(i, 0) += weights_tensor(i, j)*input_tensor(j, 0);
-      }
-    }*/
   }
 };
 
