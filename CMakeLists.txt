@@ -8,8 +8,8 @@ message("Include libraries are: ${Tensorflow_INCLUDE_DIRS}")
 # C++11 required for tensorflow
 set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
 
-#link_directories(/usr/local/lib/python3.6/site-packages/tensorflow)
-link_directories(/usr/local/lib/python3.6/site-packages/tensorflow/)
+link_directories(/home/ahanda/anaconda3/lib/python3.6/site-packages/tensorflow)
+#link_directories(/usr/local/lib/python3.6/site-packages/tensorflow/)
 link_libraries(-ltensorflow_framework)
 
 # build the actual operation which can be used directory
