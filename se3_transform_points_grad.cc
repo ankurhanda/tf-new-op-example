@@ -10,7 +10,7 @@ using namespace tensorflow;
 
 // the gradients are simply passed as additional arguments as
 // they are available in the Python function for registering the gradient operation.
-REGISTER_OP("SE3TransformPointGrad")
+REGISTER_OP("SE3TransformPointsGrad")
   .Input("grad: float32")
   .Input("input_points: float32")
   .Input("se3_transforms: float32")
@@ -22,11 +22,11 @@ REGISTER_OP("SE3TransformPointGrad")
 /// this is not possible in C*+ right now.
 /// \param context
 /// \author David Stutz
-class SE3TransformPointGradOp : public OpKernel {
+class SE3TransformPointsGradOp : public OpKernel {
 public:
   /// \brief Constructor.
   /// \param context
-  explicit SE3TransformPointGradOp(OpKernelConstruction* context) : OpKernel(context) {
+  explicit SE3TransformPointsGradOp(OpKernelConstruction* context) : OpKernel(context) {
     
   }
   
@@ -56,7 +56,7 @@ public:
     // create output tensors
     Tensor* grad_input_points = NULL;
     Tensor* grad_se3_transforms = NULL;
-    OP_REQUIRES_OK(context, context->allocate_output(0, input_point_shape, &grad_input_points));
+    OP_REQUIRES_OK(context, context->allocate_output(0, input_points_shape, &grad_input_points));
     OP_REQUIRES_OK(context, context->allocate_output(1, se3_transforms_shape, &grad_se3_transforms));
     
     // get the Eigen tensors for data access
@@ -64,25 +64,72 @@ public:
     auto se3_transforms_tensor = se3_transforms.tensor<float,3>();
     auto input_points_tensor = input_points.tensor<float,4>();
     auto grad_input_points_tensor = grad_input_points->tensor<float,4>();
-    auto grad_se3_transforms_tensor = grad_se3_transforms->matrix<float,4>();
+    auto grad_se3_transforms_tensor = grad_se3_transforms->tensor<float,3>();
    
    
     for (int b = 0; b < input_points_shape.dim_size(0); b++)
     {
+	auto r_00 = se3_transforms_tensor(b,0,0);
+	auto r_01 = se3_transforms_tensor(b,0,1);
+	auto r_02 = se3_transforms_tensor(b,0,2);
+	auto  t_0 = se3_transforms_tensor(b,0,3);
+	
+	auto r_10 = se3_transforms_tensor(b,1,0);
+	auto r_11 = se3_transforms_tensor(b,1,1);
+	auto r_12 = se3_transforms_tensor(b,1,2);
+	auto t_1 = se3_transforms_tensor(b,1,3);
+	
+	auto r_20 = se3_transforms_tensor(b,2,0);
+	auto r_21 = se3_transforms_tensor(b,2,1);
+	auto r_22 = se3_transforms_tensor(b,2,2);
+	auto t_2 = se3_transforms_tensor(b,2,3);
+	
 	for(int h=0; h < input_points_shape.dim_size(1); h++)
 	{
 	   for(int w = 0; w < input_points_shape.dim_size(2); w++)
 	   {
-		grad_input_points(b,h,w,0) = grad_tensor(b,h,w,0)*r_00 + grad_tensor(b,h,w,1)*r_10 + grad_tensor(b,h,w,2) * r_20;
-		grad_input_points(b,h,w,1) = grad_tensor(b,h,w,0)*r_01 + grad_tensor(b,h,w,1)*r_11 + grad_tensor(b,h,w,2) * r_21;
-		grad_input_points(b,h,w,2) = grad_tensor(b,h,w,0)*r_02 + grad_tensor(b,h,w,1)*r_12 + grad_tensor(b,h,w,2) * r_22;
+		grad_input_points_tensor(b,h,w,0) = grad_tensor(b,h,w,0)*r_00 + grad_tensor(b,h,w,1)*r_10 + grad_tensor(b,h,w,2) * r_20;
+		grad_input_points_tensor(b,h,w,1) = grad_tensor(b,h,w,0)*r_01 + grad_tensor(b,h,w,1)*r_11 + grad_tensor(b,h,w,2) * r_21;
+		grad_input_points_tensor(b,h,w,2) = grad_tensor(b,h,w,0)*r_02 + grad_tensor(b,h,w,1)*r_12 + grad_tensor(b,h,w,2) * r_22;
 	   }
 	}
+
     }
-	
+    
 
     for (int b =0; b < input_points_shape.dim_size(0); b++)
     {
+
+	auto r_00 = se3_transforms_tensor(b,0,0);
+	auto r_01 = se3_transforms_tensor(b,0,1);
+	auto r_02 = se3_transforms_tensor(b,0,2);
+	auto  t_0 = se3_transforms_tensor(b,0,3);
+	
+	auto r_10 = se3_transforms_tensor(b,1,0);
+	auto r_11 = se3_transforms_tensor(b,1,1);
+	auto r_12 = se3_transforms_tensor(b,1,2);
+	auto t_1 = se3_transforms_tensor(b,1,3);
+	
+	auto r_20 = se3_transforms_tensor(b,2,0);
+	auto r_21 = se3_transforms_tensor(b,2,1);
+	auto r_22 = se3_transforms_tensor(b,2,2);
+	auto t_2 = se3_transforms_tensor(b,2,3);
+
+	grad_se3_transforms_tensor(b,0,0)=0;
+	grad_se3_transforms_tensor(b,0,1)=0;
+	grad_se3_transforms_tensor(b,0,2)=0;
+	grad_se3_transforms_tensor(b,0,3)=0;
+
+	grad_se3_transforms_tensor(b,1,0)=0;
+	grad_se3_transforms_tensor(b,1,1)=0;
+	grad_se3_transforms_tensor(b,1,2)=0;
+	grad_se3_transforms_tensor(b,1,3)=0;
+
+	grad_se3_transforms_tensor(b,2,0)=0;
+	grad_se3_transforms_tensor(b,2,1)=0;
+	grad_se3_transforms_tensor(b,2,2)=0;
+	grad_se3_transforms_tensor(b,2,3)=0;
+	
 	for(int h = 0; h < input_points_shape.dim_size(1); h++)
 	{
 	   for(int w = 0; w < input_points_shape.dim_size(2); w++)
@@ -109,4 +156,4 @@ public:
   }
 };
 
-REGISTER_KERNEL_BUILDER(Name("SE3TransformPointGrad").Device(DEVICE_CPU), SE3TransformPointGradOp);
+REGISTER_KERNEL_BUILDER(Name("SE3TransformPointsGrad").Device(DEVICE_CPU), SE3TransformPointsGradOp);
