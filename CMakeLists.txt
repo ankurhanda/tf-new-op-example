@@ -14,14 +14,14 @@ link_libraries(-ltensorflow_framework)
 
 # build the actual operation which can be used directory
 include_directories(${Tensorflow_INCLUDE_DIRS})
-add_library(inner_product SHARED inner_product.cc)
+add_library(gvnn SHARED inner_product.cc se3_transform.cc se3toRt_transform.cc)
 
-# build the actual operation which can be used directory
-include_directories(${Tensorflow_INCLUDE_DIRS})
-add_library(se3toRt SHARED se3toRT_transform.cc)
+#build the actual operation which can be used directory
+#include_directories(${Tensorflow_INCLUDE_DIRS})
+#add_library(se3toRt SHARED se3toRT_transform.cc)
 
-include_directories(${Tensorflow_INCLUDE_DIRS})
-add_library(se3_layer SHARED se3_transform.cc)
+#include_directories(${Tensorflow_INCLUDE_DIRS})
+#add_library(se3_layer SHARED se3_transform.cc)
 
 # build the gradient operation which is used in inner_product_grad.py
 # to register it

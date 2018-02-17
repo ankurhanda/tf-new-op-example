@@ -100,57 +100,57 @@ public:
     for (int b =0; b < input_points_shape.dim_size(0); b++)
     {
 
-	auto r_00 = se3_transforms_tensor(b,0,0);
-	auto r_01 = se3_transforms_tensor(b,0,1);
-	auto r_02 = se3_transforms_tensor(b,0,2);
-	auto  t_0 = se3_transforms_tensor(b,0,3);
-	
-	auto r_10 = se3_transforms_tensor(b,1,0);
-	auto r_11 = se3_transforms_tensor(b,1,1);
-	auto r_12 = se3_transforms_tensor(b,1,2);
-	auto t_1 = se3_transforms_tensor(b,1,3);
-	
-	auto r_20 = se3_transforms_tensor(b,2,0);
-	auto r_21 = se3_transforms_tensor(b,2,1);
-	auto r_22 = se3_transforms_tensor(b,2,2);
-	auto t_2 = se3_transforms_tensor(b,2,3);
+        auto r_00 = se3_transforms_tensor(b,0,0);
+        auto r_01 = se3_transforms_tensor(b,0,1);
+        auto r_02 = se3_transforms_tensor(b,0,2);
+        auto  t_0 = se3_transforms_tensor(b,0,3);
 
-	grad_se3_transforms_tensor(b,0,0)=0;
-	grad_se3_transforms_tensor(b,0,1)=0;
-	grad_se3_transforms_tensor(b,0,2)=0;
-	grad_se3_transforms_tensor(b,0,3)=0;
+        auto r_10 = se3_transforms_tensor(b,1,0);
+        auto r_11 = se3_transforms_tensor(b,1,1);
+        auto r_12 = se3_transforms_tensor(b,1,2);
+        auto t_1 = se3_transforms_tensor(b,1,3);
 
-	grad_se3_transforms_tensor(b,1,0)=0;
-	grad_se3_transforms_tensor(b,1,1)=0;
-	grad_se3_transforms_tensor(b,1,2)=0;
-	grad_se3_transforms_tensor(b,1,3)=0;
+        auto r_20 = se3_transforms_tensor(b,2,0);
+        auto r_21 = se3_transforms_tensor(b,2,1);
+        auto r_22 = se3_transforms_tensor(b,2,2);
+        auto t_2 = se3_transforms_tensor(b,2,3);
 
-	grad_se3_transforms_tensor(b,2,0)=0;
-	grad_se3_transforms_tensor(b,2,1)=0;
-	grad_se3_transforms_tensor(b,2,2)=0;
-	grad_se3_transforms_tensor(b,2,3)=0;
+        grad_se3_transforms_tensor(b,0,0)=0;
+        grad_se3_transforms_tensor(b,0,1)=0;
+        grad_se3_transforms_tensor(b,0,2)=0;
+        grad_se3_transforms_tensor(b,0,3)=0;
+
+        grad_se3_transforms_tensor(b,1,0)=0;
+        grad_se3_transforms_tensor(b,1,1)=0;
+        grad_se3_transforms_tensor(b,1,2)=0;
+        grad_se3_transforms_tensor(b,1,3)=0;
+
+        grad_se3_transforms_tensor(b,2,0)=0;
+        grad_se3_transforms_tensor(b,2,1)=0;
+        grad_se3_transforms_tensor(b,2,2)=0;
+        grad_se3_transforms_tensor(b,2,3)=0;
 	
-	for(int h = 0; h < input_points_shape.dim_size(1); h++)
-	{
-	   for(int w = 0; w < input_points_shape.dim_size(2); w++)
-	   {
-		grad_se3_transforms_tensor(b,0,0) += r_00 * grad_tensor(b,h,w,0); 
-		grad_se3_transforms_tensor(b,0,1) += r_01 * grad_tensor(b,h,w,0); 
-		grad_se3_transforms_tensor(b,0,2) += r_02 * grad_tensor(b,h,w,0); 
-		grad_se3_transforms_tensor(b,0,3) +=  t_0 * grad_tensor(b,h,w,0); 
-		
-		grad_se3_transforms_tensor(b,1,0) += r_10 * grad_tensor(b,h,w,1); 
-		grad_se3_transforms_tensor(b,1,1) += r_11 * grad_tensor(b,h,w,1); 
-		grad_se3_transforms_tensor(b,1,2) += r_12 * grad_tensor(b,h,w,1); 
-		grad_se3_transforms_tensor(b,1,3) +=  t_1 * grad_tensor(b,h,w,1); 
-		
-		grad_se3_transforms_tensor(b,2,0) += r_20 * grad_tensor(b,h,w,2); 
-		grad_se3_transforms_tensor(b,2,1) += r_21 * grad_tensor(b,h,w,2); 
-		grad_se3_transforms_tensor(b,2,2) += r_22 * grad_tensor(b,h,w,2); 
-		grad_se3_transforms_tensor(b,2,3) +=  t_2 * grad_tensor(b,h,w,2); 
-			
-	   }
-	}
+        for(int h = 0; h < input_points_shape.dim_size(1); h++)
+        {
+           for(int w = 0; w < input_points_shape.dim_size(2); w++)
+           {
+            grad_se3_transforms_tensor(b,0,0) += r_00 * grad_tensor(b,h,w,0);
+            grad_se3_transforms_tensor(b,0,1) += r_01 * grad_tensor(b,h,w,0);
+            grad_se3_transforms_tensor(b,0,2) += r_02 * grad_tensor(b,h,w,0);
+            grad_se3_transforms_tensor(b,0,3) +=  t_0 * grad_tensor(b,h,w,0);
+
+            grad_se3_transforms_tensor(b,1,0) += r_10 * grad_tensor(b,h,w,1);
+            grad_se3_transforms_tensor(b,1,1) += r_11 * grad_tensor(b,h,w,1);
+            grad_se3_transforms_tensor(b,1,2) += r_12 * grad_tensor(b,h,w,1);
+            grad_se3_transforms_tensor(b,1,3) +=  t_1 * grad_tensor(b,h,w,1);
+
+            grad_se3_transforms_tensor(b,2,0) += r_20 * grad_tensor(b,h,w,2);
+            grad_se3_transforms_tensor(b,2,1) += r_21 * grad_tensor(b,h,w,2);
+            grad_se3_transforms_tensor(b,2,2) += r_22 * grad_tensor(b,h,w,2);
+            grad_se3_transforms_tensor(b,2,3) +=  t_2 * grad_tensor(b,h,w,2);
+
+           }
+        }
     }
 
   }

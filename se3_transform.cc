@@ -83,32 +83,31 @@ public:
 	    auto r00 = se3_transform_tensor(b,0,0);
 	    auto r01 = se3_transform_tensor(b,0,1);
 	    auto r02 = se3_transform_tensor(b,0,2);
-	    auto t0  = se3_transform_tensor(b,0,3);	
+	    auto t0  = se3_transform_tensor(b,0,3);
 
 	    auto r10 = se3_transform_tensor(b,1,0);
 	    auto r11 = se3_transform_tensor(b,1,1);
 	    auto r12 = se3_transform_tensor(b,1,2);
-	    auto t1  = se3_transform_tensor(b,1,3);	
+	    auto t1  = se3_transform_tensor(b,1,3);
 
-            auto r20 = se3_transform_tensor(b,2,0);
-            auto r21 = se3_transform_tensor(b,2,1);
-            auto r22 = se3_transform_tensor(b,2,2);
-            auto t2  = se3_transform_tensor(b,2,3);	
+        auto r20 = se3_transform_tensor(b,2,0);
+        auto r21 = se3_transform_tensor(b,2,1);
+        auto r22 = se3_transform_tensor(b,2,2);
+        auto t2  = se3_transform_tensor(b,2,3);
 
-	for (int h = 0; h < output->shape().dim_size(1); h++)
-	{
-	   for (int w = 0; w < output->shape().dim_size(2); w++)
-	   {
-		   auto X = input_tensor(b,h,w,0);
-		   auto Y = input_tensor(b,h,w,1);
-		   auto Z = input_tensor(b,h,w,2);
+        for (int h = 0; h < output->shape().dim_size(1); h++)
+        {
+           for (int w = 0; w < output->shape().dim_size(2); w++)
+           {
+               auto X = input_tensor(b,h,w,0);
+               auto Y = input_tensor(b,h,w,1);
+               auto Z = input_tensor(b,h,w,2);
 
-
-		   output_tensor(b,h,w,0) = r00 * X + r01 * Y + r02* Z + t0;     
-		   output_tensor(b,h,w,1) = r10 * X + r11 * Y + r12* Z + t1;   
-		   output_tensor(b,h,w,2) = r20 * X + r21 * Y + r22* Z + t2;     
-	   }
-	}
+               output_tensor(b,h,w,0) = r00 * X + r01 * Y + r02* Z + t0;
+               output_tensor(b,h,w,1) = r10 * X + r11 * Y + r12* Z + t1;
+               output_tensor(b,h,w,2) = r20 * X + r21 * Y + r22* Z + t2;
+           }
+        }
     }
 
   }
