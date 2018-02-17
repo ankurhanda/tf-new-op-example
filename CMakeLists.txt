@@ -19,4 +19,4 @@ add_library(gvnn SHARED inner_product.cc se3_transform.cc se3toMatrixRt.cc)
 # build the gradient operation which is used in inner_product_grad.py
 # to register it
 include_directories(${Tensorflow_INCLUDE_DIRS})
-add_library(gvnn_grad SHARED inner_product_grad.cc se3_transform_points_grad.cc)
+add_library(gvnn_grad SHARED inner_product_grad.cc se3_transform_points_grad.cc se3toMatrixRt_grad.cc)

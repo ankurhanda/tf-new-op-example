@@ -79,6 +79,7 @@ public:
         if (theta < 1e-12)
         {
             cos_term = 0;
+            sin_term = 1;
         }
 
         output_tensor(b,0,0) = 1 + cos_term * (-omega_z*omega_z - omega_y*omega_y);
