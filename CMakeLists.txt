@@ -14,7 +14,7 @@ link_libraries(-ltensorflow_framework)
 
 # build the actual operation which can be used directory
 include_directories(${Tensorflow_INCLUDE_DIRS})
-add_library(gvnn SHARED inner_product.cc se3_transform.cc se3toRt_transform.cc)
+add_library(gvnn SHARED inner_product.cc se3_transform.cc se3toMatrixRt.cc)
 
 #build the actual operation which can be used directory
 #include_directories(${Tensorflow_INCLUDE_DIRS})
