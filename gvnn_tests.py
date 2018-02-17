@@ -36,7 +36,7 @@ class gvnnOpTest(unittest.TestCase):
             se3_transforms = tf.placeholder(tf.float32, shape=(2,3,4))
 
             out = gvnn_module.se3_transform(p_3D, se3_transforms)
-            grad_x = tf.gradients(out, x)
+            grad_x = tf.gradients(out, p_3D)
 
             np_p_3D = np.random.rand(2,1,1,3)
             np_se3_transforms = np.random.rand(2,3,4)
